@@ -25,18 +25,19 @@ print(outdir)
 
 names(queryfile) <- querylabel
 
-handleBedparams <- list(fix_width=0, fix_point="center", useScore=FALSE, outRle=FALSE, CLIP_reads=FALSE,
+handleBedparams <- setImportParams(fix_width=0, fix_point="center", useScore=FALSE, outRle=FALSE, offset=0,
 norm=FALSE, useSizeFactor=FALSE, genome="hg19")
 
-pa <- plot_peak_annotation(peakfile=queryfile, 
+pa <- plot_peak_annotation(peakFile=queryfile, 
 				gtfFile=gtffile, 
-				handleInputParams=handleBedparams, 
+				importParams=handleBedparams, 
 				fiveP=0,
+				dsTSS=0,
                                 threeP=0, 
 				simple=FALSE,
-                                RNA=TRUE, 
 				verbose=FALSE, 
-				outPrefix=op)
+				outPrefix=op
+				nc=5)
 
 write.table(pa$annotation, file.path(outdir, paste0(querylabel, "_biotype_df.tab")), sep="\t", quote=F, col.names=T, row.names=T)
 write.table(pa$stat, file.path(outdir, paste0(querylabel, "_barchart_df.tab")), sep="\t", quote=F, col.names=T, row.names=T)
