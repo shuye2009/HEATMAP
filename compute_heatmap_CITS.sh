@@ -45,7 +45,7 @@ for d in $(ls -d ${factor}_CITS_crosslinkSite); do
 		if [[ ! -f $outd/${factor}_5parts_plot_df.tab ]] || [[ $replace == +(5parts|true) ]]; then
 
                         echo "      processing $factor for metagene5"
-                        submitjob -c 5 -m 10 Rscript $rcmd_metagene5 $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor}_5parts $outd
+                        submitjob -c 5 -m 25 Rscript $rcmd_metagene5 $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor}_5parts $outd
                 else
                         echo "      $factor metagene has been processed"
                 fi
@@ -53,21 +53,21 @@ for d in $(ls -d ${factor}_CITS_crosslinkSite); do
 		if [[ ! -f $outd/${factor}_3parts_plot_df.tab ]] || [[ $replace == +(3parts|true) ]]; then
 
 			echo "      processing $factor for metagene3"
-			submitjob -c 5 -m 10 Rscript $rcmd_metagene3 $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor}_3parts $outd
+			submitjob -c 5 -m 25 Rscript $rcmd_metagene3 $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor}_3parts $outd
 		else
 			echo "      $factor metagene has been processed"
 		fi
 
                 if [[ ! -f $outd/${factor}_intron_plot_df.tab ]] || [[ $replace == +(intron|true) ]]; then
                         echo "      processing $factor for intron junctions"
-                        submitjob -c 5 -m 10 Rscript $rcmd_intron $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor}_intron $outd
+                        submitjob -c 5 -m 25 Rscript $rcmd_intron $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor}_intron $outd
                 else
                         echo "      $factor intron junction has been processed"
                 fi
 
 		if [[ ! -f $outd/${factor}_m6A_plot_df.tab ]] || [[ $replace == +(m6A|true) ]]; then
                         echo "      processing $factor for m6A sites"
-                        submitjob -c 5 -m 10 Rscript $rcmd_locus $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor} ${m6A_sites} "m6A" $outd
+                        submitjob -c 5 -m 25 Rscript $rcmd_locus $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor} ${m6A_sites} "m6A" $outd
                 else
                         echo "      $factor m6A site has been processed"
                 fi
@@ -75,7 +75,7 @@ for d in $(ls -d ${factor}_CITS_crosslinkSite); do
 
 		if [[ ! -f $outd/${factor}_GLORIm6A_plot_df.tab ]] || [[ $replace == +(GLORIm6A|true) ]]; then
                         echo "      processing $factor for GLORIm6A sites"
-                        submitjob -c 5 -m 10 Rscript $rcmd_locus $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor} ${GLORI_m6A_sites} "GLORIm6A" $outd
+                        submitjob -c 5 -m 25 Rscript $rcmd_locus $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor} ${GLORI_m6A_sites} "GLORIm6A" $outd
                 else
                         echo "      $factor GLORIm6A site has been processed"
                 fi
@@ -83,28 +83,28 @@ for d in $(ls -d ${factor}_CITS_crosslinkSite); do
 
 		if [[ ! -f $outd/${factor}_m6Am_plot_df.tab ]] || [[ $replace == +(m6Am|true) ]]; then
                         echo "      processing $factor for m6Am sites"
-                        submitjob -c 5 -m 10 Rscript $rcmd_locus $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor} ${m6Am_sites} "m6Am" $outd
+                        submitjob -c 5 -m 25 Rscript $rcmd_locus $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor} ${m6Am_sites} "m6Am" $outd
                 else
                         echo "      $factor m6Am site has been processed"
                 fi
 
 		 if [[ ! -f $outd/${factor}_TSScgt_plot_df.tab ]] || [[ $replace == +(TSScgt|true) ]]; then
                         echo "      processing $factor for TSScgt sites"
-                        submitjob -c 5 -m 10 Rscript $rcmd_locus $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor} ${TSScgt_sites} "TSScgt" $outd
+                        submitjob -c 5 -m 25 Rscript $rcmd_locus $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor} ${TSScgt_sites} "TSScgt" $outd
                 else
                         echo "      $factor TSScgt site has been processed"
                 fi
 
 		if [[ ! -f $outd/${factor}_R_loop_plot_df.tab ]] || [[ $replace == +(R_loop|true) ]]; then
                         echo "      processing $factor for R_loop sites"
-                        submitjob -c 5 -m 10 Rscript $rcmd_locus $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor} ${R_loop_sites} "R_loop" $outd
+                        submitjob -c 5 -m 25 Rscript $rcmd_locus $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor} ${R_loop_sites} "R_loop" $outd
                 else
                         echo "      $factor R_loop site has been processed"
                 fi
 
 		if [[ ! -f $outd/${factor}_peak_annotation_barchart_df.tab ]] || [[ $replace == +(annotation|true) ]]; then
                         echo "      processing $factor for peak annotation"
-                        submitjob -c 5 -m 10 Rscript $rcmd_peakAnnotation $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor}_peak_annotation $outd
+                        submitjob -c 5 -m 25 Rscript $rcmd_peakAnnotation $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor}_peak_annotation $outd
                 else
                         echo "      $factor peak annotation has been processed"
                 fi
@@ -112,7 +112,7 @@ for d in $(ls -d ${factor}_CITS_crosslinkSite); do
 		if [[ ! -f $outd/${factor}_ChIPoverlap_plot_df.tab ]] || [[ $replace == +(ChIPoverlap|true) ]]; then
                         echo "      processing $factor for ChIPseq peak overlap"
 			if [[ -f ${Chip_peak_dir}/${factor}_summits_hg19.bed ]]; then
-                        	submitjob -c 5 -m 10 Rscript $rcmd_locus $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor} ${Chip_peak_dir}/${factor}_summits_hg19.bed "ChIPoverlap" $outd
+                        	submitjob -c 5 -m 25 Rscript $rcmd_locus $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed ${factor} ${Chip_peak_dir}/${factor}_summits_hg19.bed "ChIPoverlap" $outd
 			else
 				echo "    	   ${factor}_summits_hg19.bed does not exit!"
 			fi
@@ -123,7 +123,7 @@ for d in $(ls -d ${factor}_CITS_crosslinkSite); do
 		if [[ ! -f $outd/${factor}_ChIPparts_plot_df.tab ]] || [[ $replace == +(ChIPparts|true) ]]; then
                         echo "      processing $factor for ChIPseq peak metagene"
                         if [[ -f ${Chip_peak_dir}/${factor}_summits_hg19.bed ]]; then
-                                submitjob -c 5 -m 10 Rscript $rcmd_metagene5 ${Chip_peak_dir}/${factor}_summits_hg19.bed ${factor}_ChIPparts $outd
+                                submitjob -c 5 -m 25 Rscript $rcmd_metagene5 ${Chip_peak_dir}/${factor}_summits_hg19.bed ${factor}_ChIPparts $outd
                         else
                                 echo "             ${factor}_summits_hg19.bed does not exit!"
                         fi

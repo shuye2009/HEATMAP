@@ -24,7 +24,7 @@ print(featureTypes)
 print(peak)
 print(all)
 
-dat_files <- list.files(pattern=paste0(filePattern, "_plot_df.tab"))
+dat_files <- list.files(pattern=paste0("_", filePattern, "_plot_df.tab"))
 print(length(dat_files))
 
 intensity_dat <- lapply(dat_files, function(f){
@@ -35,6 +35,8 @@ intensity_mat <- lapply(intensity_dat, function(x){return(x$Intensity)})
 intensity_mat <- as.data.frame(do.call(rbind, intensity_mat))
 #print(intensity_mat)
 genes <- sapply(intensity_dat, function(x){unique(gsub(paste0("_",filePattern), "", x$Query))})
+print("Duplicated genes")
+print(genes[duplicated(genes)])
 rownames(intensity_mat) <- genes
 colnames(intensity_mat) <- intensity_dat[[1]]$Position
 print(dim(intensity_mat))
@@ -58,7 +60,7 @@ colnames(intensity_matN) <- intensity_dat[[1]]$Position
 positions <- intensity_dat[[1]]$Position
 print(dim(intensity_mat))
 #print(colnames(intensity_mat))
-if (filePattern %in% c("m6A", "GLORIm6A", "m6Am", "TSScgt",  "R_loop", "ChIPoverlap")){
+if (filePattern %in% c("m6A", "GLORIm6A", "GLORIm6Aclust", "m6Am", "TSScgt",  "R_loop", "ChIPoverlap")){
 	selected_columns <- as.character(intensity_dat[[1]]$Position[intensity_dat[[1]]$Position >= uplimit & intensity_dat[[1]]$Position <= downlimit])
 	intensity_mat <- intensity_mat[, selected_columns]
 	intensity_matN <- intensity_matN[, selected_columns]
@@ -77,7 +79,7 @@ if(filePattern %in% c("3parts", "ChIPparts")){
 	features <- factor(intensity_dat[[1]]$Feature, levels=c("UE", featureTypes, "DE"))
 	features[features == "Start of intron" & positions < 0] <- "UE"
 	features[features == "End of intron" & positions >= 0] <- "DE"
-}else if (filePattern %in% c("m6A", "GLORIm6A", "m6Am", "TSScgt", "R_loop", "ChIPoverlap")){
+}else if (filePattern %in% c("m6A", "GLORIm6A", "GLORIm6Aclust", "m6Am", "TSScgt", "R_loop", "ChIPoverlap")){
 	features <- factor(rep(filePattern, length(selected_columns)), levels=featureTypes)
         features[positions < 0] <- "upstream"
         features[positions > 0] <- "downstream"

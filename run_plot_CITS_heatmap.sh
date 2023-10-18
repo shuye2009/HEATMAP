@@ -45,6 +45,12 @@ if [[ "$plotPattern" == +(GLORIm6A|all) ]]; then
         Rscript $rcmd $wd $outd $filePattern "$featureTypes" $peak "$all" "-1000,1000"
 fi
 
+if [[ "$plotPattern" == +(GLORIm6Aclust|all) ]]; then
+        filePattern="GLORIm6Aclust"
+        featureTypes="upstream,GLORIm6Aclust,downstream"
+        Rscript $rcmd $wd $outd $filePattern "$featureTypes" $peak "$all" "-1000,1000"
+fi
+
 if [[ "$plotPattern" == +(m6Am|all) ]]; then
         filePattern="m6Am"
         featureTypes="upstream,m6Am,downstream"
