@@ -40,7 +40,7 @@ pa <- plot_peak_annotation(peakFile=queryfile,
 				nc=5)
 
 write.table(pa$annotation, file.path(outdir, paste0(querylabel, "_biotype_df.tab")), sep="\t", quote=F, col.names=T, row.names=T)
-write.table(pa$stat, file.path(outdir, paste0(querylabel, "_plot_df.tab")), sep="\t", quote=F, col.names=T, row.names=T)
+write.table(pa$stat, file.path(outdir, paste0(querylabel, "_barchart_df.tab")), sep="\t", quote=F, col.names=T, row.names=T)
 write.table(pa$simplified, file.path(outdir, paste0(querylabel, "_simplified_df.tab")), sep="\t", quote=F, col.names=T, row.names=T)
 
 ## END

@@ -6,7 +6,7 @@ plotPattern=$3
 if [[ $# -lt 3 ]]; then
 	echo "argument1: crosslink_recurring, crosslink_merged, CITS_recurring, CITS_merged or CITS_merged_filtered"
 	echo "argument2: all or selected"
-	echo "argument3: 3parts, intron, m6A, m6Am, TSScgt, R_loop, ChIPoverlap, ChIPparts, peak_annotation or all"
+	echo "argument3: 3parts, intron, GLORIm6A, GLORIm6clust, GLORIm6ANonclust, m6A, m6Am, TSScgt, R_loop, ChIPoverlap, ChIPparts, peak_annotation or all"
 	exit 1
 fi
 
@@ -48,6 +48,12 @@ fi
 if [[ "$plotPattern" == +(GLORIm6Aclust|all) ]]; then
         filePattern="GLORIm6Aclust"
         featureTypes="upstream,GLORIm6Aclust,downstream"
+        Rscript $rcmd $wd $outd $filePattern "$featureTypes" $peak "$all" "-1000,1000"
+fi
+
+if [[ "$plotPattern" == +(GLORIm6ANonclust|all) ]]; then
+        filePattern="GLORIm6ANonclust"
+        featureTypes="upstream,GLORIm6ANonclust,downstream"
         Rscript $rcmd $wd $outd $filePattern "$featureTypes" $peak "$all" "-1000,1000"
 fi
 

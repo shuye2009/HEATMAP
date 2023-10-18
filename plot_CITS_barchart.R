@@ -18,6 +18,11 @@ outd <- args[2]
 filePattern <- args[3] #"peak_annotation"
 peak <- args[4]  # CITS_merged_filtered
 all <- args[5] # enter "all" or "selected"
+
+if(length(args) < 5){
+	stop("The following arguments are required: workingdir, outdir, peak_annotation, CITS_merged_filtered, selected")
+}
+
 setwd(wd)
 
 print(filePattern)
