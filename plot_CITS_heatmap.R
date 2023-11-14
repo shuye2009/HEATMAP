@@ -60,7 +60,8 @@ colnames(intensity_matN) <- intensity_dat[[1]]$Position
 positions <- intensity_dat[[1]]$Position
 print(dim(intensity_mat))
 #print(colnames(intensity_mat))
-if (filePattern %in% c("m6A", "GLORIm6A", "GLORIm6Aclust", "GLORIm6ANonclust", "m6Am", "TSScgt",  "R_loop", "ChIPoverlap")){
+locus_name <- c("m6A", "m6Autr5", "m6Acds", "m6Autr3", "m6Aintron", "GLORIm6A", "GLORIm6Aclust", "GLORIm6ANonclust", "m6Am", "TSScgt",  "R_loop", "ChIPoverlap")
+if (filePattern %in% locus_name){
 	selected_columns <- as.character(intensity_dat[[1]]$Position[intensity_dat[[1]]$Position >= uplimit & intensity_dat[[1]]$Position <= downlimit])
 	intensity_mat <- intensity_mat[, selected_columns]
 	intensity_matN <- intensity_matN[, selected_columns]
@@ -79,7 +80,7 @@ if(filePattern %in% c("3parts", "ChIPparts")){
 	features <- factor(intensity_dat[[1]]$Feature, levels=c("UE", featureTypes, "DE"))
 	features[features == "Start of intron" & positions < 0] <- "UE"
 	features[features == "End of intron" & positions >= 0] <- "DE"
-}else if (filePattern %in% c("m6A", "GLORIm6A", "GLORIm6Aclust", "GLORIm6ANonclust", "m6Am", "TSScgt", "R_loop", "ChIPoverlap")){
+}else if (filePattern %in% locus_name){
 	features <- factor(rep(filePattern, length(selected_columns)), levels=featureTypes)
         features[positions < 0] <- "upstream"
         features[positions > 0] <- "downstream"
@@ -135,24 +136,48 @@ lapply(names(intensity_list), function(x){
 	limmed <- (limmax+limmin)/2
 
 	print(c(limmin, limmed, limmax))
-	h <- Heatmap(intensity_x, 
-		name=paste(x,"Density"), 
-		col = colorRamp2(c(min(0, limmin), limmed, limmax), c("#3e26a7", "#13beb7", "#f9fb15")), 
-		top_annotation = ha,
-		left_annotation = va, 
-		clustering_distance_rows = "euclidean",
-		clustering_method_rows = "average",
-		show_row_names = TRUE, 	
-		show_column_names = FALSE,
-		#column_names_side = "bottom", 
-		cluster_columns=FALSE,
-	        row_dend_reorder = TRUE,	
-		row_names_side="left", 	
-		row_names_gp = gpar(fontsize = 7), 	
-		column_split = features,
-		column_gap = unit(0.5, "mm"))
-	#draw(h)
+	
+	h <- Heatmap(as.matrix(intensity_x),
+                        name=paste(x,"Density"),
+                        col = colorRamp2(c(min(0, limmin), limmed, limmax), c("#3e26a7", "#13beb7", "#f9fb15")),
+                        top_annotation = ha,
+                        left_annotation = va,
+                        cluster_columns = FALSE,
+                        clustering_distance_rows = "euclidean",
+                        clustering_method_rows = "average",
+                        show_row_names = TRUE,
+                        show_column_names = FALSE,
+                        row_names_side="left",
+                        row_names_gp = gpar(fontsize = 7),
+                        column_split = features,
+                        column_gap = unit(0.5, "mm")
+                )
+        h <- draw(h)
+
+        if(filePattern == "m6A") {
+        	ro <- row_order(h)
+                saveRDS(ro, file=paste0("m6A_", x, ".rds"))
+        } else if (filePattern %in% c("m6Autr5", "m6Acds", "m6Autr3", "m6Aintron", "GLORIm6A", "GLORIm6Aclust", "GLORIm6ANonclust")) {
+		ro <- readRDS(file = paste0("m6A_", x, ".rds"))
+
+		hro <- Heatmap(as.matrix(intensity_x),
+                	name=paste(x,"Density"),
+                	col = colorRamp2(c(min(0, limmin), limmed, limmax), c("#3e26a7", "#13beb7", "#f9fb15")),
+                	top_annotation = ha,
+                	left_annotation = va,
+                	row_order = ro,
+                	show_row_names = TRUE,
+                	show_column_names = FALSE,
+                	cluster_columns=FALSE,
+                	row_names_side="left",
+                	row_names_gp = gpar(fontsize = 7),
+                	column_split = features,
+                	column_gap = unit(0.5, "mm")
+        	)
+		#hro <- draw(hro)
+	}
 })
+
 dev.off()
 
 print(paste("finish", filePattern, "heatmap of CITS peaks"))

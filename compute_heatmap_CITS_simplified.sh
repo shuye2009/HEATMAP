@@ -11,7 +11,8 @@ if [[ $# -lt 2 ]]; then
 	echo "Enter: merged or merged_filtered or recurring for the first argument"
 	echo "Enter: CITS or crosslink for the second argument"
 	echo "Enter: type of plot for the third argument, valid valuses are: \
-		5parts, 3parts, intron, m6A, GLORIm6A, GLORIm6Aclust, GLORIm6ANonclust, m6Am, R_loop, TSScgt, ChIPoverlap, ChIPparts, annotation"
+		5parts, 3parts, intron, m6A, m6Autr5, m6Acds, m6Autr3, m6Aintron, GLORIm6A, GLORIm6Aclust, GLORIm6ANonclust, \
+		m6Am, R_loop, TSScgt, ChIPoverlap, ChIPparts, annotation"
 	echo "Enter: true or false, depending on whether you want to override the data"
 	echo "Enter: gene name like SP1 for specific gene, or all for all genes"
 	exit 1
@@ -25,12 +26,16 @@ rcmd_intron=$HOME/HEATMAP/run_plot_intron_junctions.R
 rcmd_locus=$HOME/HEATMAP/run_plot_locus.R
 rcmd_peakAnnotation=$HOME/HEATMAP/run_plot_peak_annotation.R
 
-GLORI_m6A_sites=$HOME/Nabeel/clip_analysis/data_input/CLIP_cits/m6AHek_CITS_crosslinkSite/putative_m6A/GLORI_identified_m6A_sites_in_HEK293_cells_all_hg19.bed
-GLORI_m6A_clustered=$HOME/Nabeel/clip_analysis/data_input/CLIP_cits/m6AHek_CITS_crosslinkSite/putative_m6A/GLORI_identified_m6A_sites_in_HEK293_cells_clustered_hg19.bed
-GLORI_m6A_Noncluster=$HOME/Nabeel/clip_analysis/data_input/CLIP_cits/m6AHek_CITS_crosslinkSite/putative_m6A/GLORI_identified_m6A_sites_in_HEK293_cells_Non-cluster_hg19.bed
-TSScgt_sites=$HOME/Nabeel/clip_analysis/data_input/CLIP_cits/m6AHek_CITS_crosslinkSite/putative_m6A/TSS_start_with_CGT.bed
-m6A_sites=$HOME/Nabeel/clip_analysis/data_input/CLIP_cits/m6AHek_CITS_crosslinkSite/putative_m6A/putative_m6A_sites_from_m6AHek_CITS.bed
-m6Am_sites=$HOME/Nabeel/clip_analysis/data_input/CLIP_cits/m6AHek_CITS_crosslinkSite/putative_m6A/putative_m6Am_sites_from_m6AHek_CITS.bed
+GLORI_m6A_sites=$HOME/Nabeel/clip_analysis/putative_m6A/GLORI_identified_m6A_sites_in_HEK293_cells_all_hg19.bed
+GLORI_m6A_clustered=$HOME/Nabeel/clip_analysis/putative_m6A/GLORI_identified_m6A_sites_in_HEK293_cells_clustered_hg19.bed
+GLORI_m6A_Noncluster=$HOME/Nabeel/clip_analysis/putative_m6A/GLORI_identified_m6A_sites_in_HEK293_cells_Non-cluster_hg19.bed
+TSScgt_sites=$HOME/Nabeel/clip_analysis/putative_m6A/TSS_start_with_CGT.bed
+m6A_sites=$HOME/Nabeel/clip_analysis/putative_m6A/putative_m6A_sites_from_m6AHek_CITS.bed
+m6Autr5_sites=$HOME/Nabeel/clip_analysis/putative_m6A/putative_m6A_sites_in_utr5.bed
+m6Acds_sites=$HOME/Nabeel/clip_analysis/putative_m6A/putative_m6A_sites_in_cds.bed
+m6Autr3_sites=$HOME/Nabeel/clip_analysis/putative_m6A/putative_m6A_sites_in_utr3.bed
+m6Aintron_sites=$HOME/Nabeel/clip_analysis/putative_m6A/putative_m6A_sites_in_intron.bed
+m6Am_sites=$HOME/Nabeel/clip_analysis/putative_m6A/putative_m6Am_sites_from_m6AHek_CITS.bed
 R_loop_sites=$HOME/Nabeel/R_loop/HEK293_R_loop.narrowPeak.bed
 Chip_peak_dir=$HOME/Nabeel/clip_analysis/data_input/CLIP_ChIP_overlap/chip_seq_files_hg19
 
@@ -59,6 +64,22 @@ case "$subject" in
 		rcmd=${rcmd_locus}
 		sites=${m6A_sites}
 		;;
+	"m6Autr5")
+                rcmd=${rcmd_locus}
+                sites=${m6Autr5_sites}
+                ;;
+	"m6Acds")
+                rcmd=${rcmd_locus}
+                sites=${m6Acds_sites}
+                ;;
+	"m6Autr3")
+                rcmd=${rcmd_locus}
+                sites=${m6Autr3_sites}
+                ;;
+	"m6Aintron")
+                rcmd=${rcmd_locus}
+                sites=${m6Aintron_sites}
+                ;;
 	"GLORIm6A")
 		rcmd=${rcmd_locus}
 		sites=${GLORI_m6A_sites}
@@ -88,7 +109,8 @@ case "$subject" in
 		;;
 	*)
 		echo "Not a valid subject term, valid valuses are: \
-                	5parts, 3parts, intron, m6A, GLORIm6A, m6Am, R_loop, TSScgt, ChIPoverlap, ChIPparts, annotation"
+                	5parts, 3parts, intron, m6A, m6Autr5, m6Acds, m6Autr3, GLORIm6A, m6Am, \
+			m6Autr5, m6Acds, m6Autr3, R_loop, TSScgt, ChIPoverlap, ChIPparts, annotation"
 		exit 1
 		;;
 esac

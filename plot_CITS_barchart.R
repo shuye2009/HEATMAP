@@ -10,6 +10,7 @@ library(dplyr)
 library(ggplot2)
 library(ggtree)
 library(ggsci)
+library(RColorBrewer)
 
 args <- commandArgs(trailingOnly=TRUE)
 
@@ -92,13 +93,21 @@ for(g in c("barchart", "biotype", "simplified")){
 
         	d <- data.frame(label = names(clus), annot = vannot[names(clus)])
 		d[is.na(d)] <- "Other"
+
+		vcolors <- brewer.pal(length(unique(vannot)), name = "Dark2")
+		names(vcolors) <- sort(unique(vannot))
+		vcols <- vcolors[vannot[names(clus)]] ## annotations get colors, NA annotations get NA values as color
+		names(vcols) <- vannot[names(clus)]
+
         	atree <- p %<+% d +
                 	#layout_dendrogram() +
                 	#geom_tippoint(aes(shape=20, color=factor(annot)), size=2) +
-                	geom_tiplab(aes(color=factor(annot)), size=3, offset=of, hjust=0) +
+                	geom_tiplab(aes(color=factor(annot)), 
+				    size=3, offset=of, hjust=0) +
+			scale_color_manual(values=vcols) +
                 	#scale_color_brewer(palette='Set1', breaks=1:ncluster) +
                 	guides(color = guide_legend(title = "GeneType")) +
-			scale_color_d3() +
+			#scale_color_d3() +
                 	hexpand(0.15)
 
 		print("Genes in annotation table but not in data:"); print(setdiff(vdf$Gene, rownames(stat_mat)))
