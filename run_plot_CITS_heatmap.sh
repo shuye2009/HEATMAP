@@ -29,7 +29,7 @@ fi
 
 if [[ "$plotPattern" == +(intron|all) ]]; then
 	filePattern="intron"
-	featureTypes="Start of intron,Center of intron,End of intron"
+	featureTypes="Start,Center,End"
 	Rscript $rcmd $wd $outd $filePattern "$featureTypes" $peak "$all"
 fi
 

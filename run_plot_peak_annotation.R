@@ -12,10 +12,9 @@ gtffile <- "/home/greenblattlab/shuyepu/genomic_feature/gencode.v19.annotation.g
 args <- commandArgs(trailingOnly = T)
 queryfile <- args[1]
 querylabel <- args[2]
-outdir <- args[3]
-op <- args[4]
+subject <- args[3]
+outdir <- args[4]
 
-if(is.na(op)) op <- NULL
 if(length(args) < 2) stop("query file and query label are mandatory!")
 if(is.na(outdir)) outdir <- "."
 
@@ -33,14 +32,14 @@ pa <- plot_peak_annotation(peakFile=queryfile,
 				importParams=handleBedparams, 
 				fiveP=0,
 				dsTSS=0,
-                                threeP=0, 
+                threeP=0, 
 				simple=FALSE,
 				verbose=FALSE, 
-				outPrefix=op
+				outPrefix=NULL,
 				nc=5)
 
-write.table(pa$annotation, file.path(outdir, paste0(querylabel, "_biotype_df.tab")), sep="\t", quote=F, col.names=T, row.names=T)
-write.table(pa$stat, file.path(outdir, paste0(querylabel, "_barchart_df.tab")), sep="\t", quote=F, col.names=T, row.names=T)
-write.table(pa$simplified, file.path(outdir, paste0(querylabel, "_simplified_df.tab")), sep="\t", quote=F, col.names=T, row.names=T)
+write.table(pa$annotation, file.path(outdir, paste(querylabel, subject, "biotype_df.tab", sep="_")), sep="\t", quote=F, col.names=T, row.names=T)
+write.table(pa$stat, file.path(outdir, paste(querylabel, subject, "barchart_df.tab", sep="_")), sep="\t", quote=F, col.names=T, row.names=T)
+write.table(pa$simplified, file.path(outdir, paste(querylabel, subject, "simplified_df.tab", sep="_")), sep="\t", quote=F, col.names=T, row.names=T)
 
 ## END

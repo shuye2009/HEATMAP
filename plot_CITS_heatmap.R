@@ -35,6 +35,7 @@ intensity_mat <- lapply(intensity_dat, function(x){return(x$Intensity)})
 intensity_mat <- as.data.frame(do.call(rbind, intensity_mat))
 #print(intensity_mat)
 genes <- sapply(intensity_dat, function(x){unique(gsub(paste0("_",filePattern), "", x$Query))})
+genes <- gsub(":meta", "", genes)
 print("Duplicated genes")
 print(genes[duplicated(genes)])
 rownames(intensity_mat) <- genes
@@ -44,7 +45,7 @@ print(dim(intensity_mat))
 if(all == "all"){ 
 	exclude <- c("")
 }else{
-	exclude <- c("GFP", "m6AGFP", "m6AZBTB48", "m6AFTO", "m6AHek", "Input", "CBLL1")
+	exclude <- c("GFP", "m6AGFP", "m6AZBTB48", "m6AFTO", "m6AHek", "Input", "CBLL1", "Ubiquitin", "ZNF121", "ZNF281")
 }
 print(paste(c("excluding:", exclude)))
 
@@ -77,9 +78,10 @@ pdffile <- file.path(outd, paste0(peak, "_peak_", filePattern, "_heatmap_", all,
 if(filePattern %in% c("3parts", "ChIPparts")){
 	features <- factor(intensity_dat[[1]]$Feature, levels=featureTypes)
 }else if(filePattern == "intron"){
-	features <- factor(intensity_dat[[1]]$Feature, levels=c("UE", featureTypes, "DE"))
-	features[features == "Start of intron" & positions < 0] <- "UE"
-	features[features == "End of intron" & positions >= 0] <- "DE"
+	features <- factor(intensity_dat[[1]]$Location, levels=c("UE", featureTypes, "DE"))
+	positions <- intensity_dat[[1]]$Position
+	features[features == "Start" & positions < 0] <- "UE"
+	features[features == "End" & positions >= 0] <- "DE"
 }else if (filePattern %in% locus_name){
 	features <- factor(rep(filePattern, length(selected_columns)), levels=featureTypes)
         features[positions < 0] <- "upstream"
@@ -120,13 +122,6 @@ print("preparing vertical annotation")
 #print(vcols)
 va <- HeatmapAnnotation(df = data.frame(Gene=vannot), col=list(Gene=vcols), which="row", na_col="grey")
 
-	limmin <- min(intensity_mat)
-        limmax <- max(intensity_mat)
-        limmed <- (limmax+limmin)/2
-
-        print(c(limmin, limmed, limmax))
-
-
 intensity_list <- list("Raw"=intensity_mat, "Scaled"=log(intensity_mat*1000+1), "Normalized"=intensity_matN)
 pdf(pdffile, width=8, height=8)
 lapply(names(intensity_list), function(x){
@@ -135,7 +130,9 @@ lapply(names(intensity_list), function(x){
 	limmax <- max(intensity_x)
 	limmed <- (limmax+limmin)/2
 
-	print(c(limmin, limmed, limmax))
+	print(c(x, "min, median, max:"))
+    print(c(limmin, limmed, limmax))
+
 	
 	h <- Heatmap(as.matrix(intensity_x),
                         name=paste(x,"Density"),
@@ -148,7 +145,7 @@ lapply(names(intensity_list), function(x){
                         show_row_names = TRUE,
                         show_column_names = FALSE,
                         row_names_side="left",
-                        row_names_gp = gpar(fontsize = 7),
+                        row_names_gp = gpar(fontsize = 6),
                         column_split = features,
                         column_gap = unit(0.5, "mm")
                 )

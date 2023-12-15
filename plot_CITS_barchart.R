@@ -41,11 +41,11 @@ names(vannot) <- vdf$Gene
 if(all == "all"){
         exclude <- c("")
 }else{
-        exclude <- c("GFP", "m6AGFP", "m6AZBTB48", "m6AFTO", "m6AHek", "Input", "CBLL1")
+        exclude <- c("GFP", "m6AGFP", "m6AZBTB48", "m6AFTO", "m6AHek", "Input", "CBLL1", "Ubiquitin", "ZNF121", "ZNF281")
 }
 print(paste(c("excluding:", exclude)))
 
-pdffile <- file.path(outd, paste0(peak, "_peak_", filePattern, "_barchart_", all, ".pdf"))
+pdffile <- file.path(outd, paste0(peak, "_", filePattern, "_barchart_", all, ".pdf"))
 pdf(pdffile, width=12, height=12)
 
 lvs <- list("barchart"=c("Intron", "3'UTR", "CDS", "5'UTR"), 

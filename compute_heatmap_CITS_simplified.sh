@@ -12,7 +12,7 @@ if [[ $# -lt 2 ]]; then
 	echo "Enter: CITS or crosslink for the second argument"
 	echo "Enter: type of plot for the third argument, valid valuses are: \
 		5parts, 3parts, intron, m6A, m6Autr5, m6Acds, m6Autr3, m6Aintron, GLORIm6A, GLORIm6Aclust, GLORIm6ANonclust, \
-		m6Am, R_loop, TSScgt, ChIPoverlap, ChIPparts, annotation"
+		m6Am, R_loop, TSScgt, ChIPoverlap, ChIPparts, peak_annotation"
 	echo "Enter: true or false, depending on whether you want to override the data"
 	echo "Enter: gene name like SP1 for specific gene, or all for all genes"
 	exit 1
@@ -57,7 +57,7 @@ case "$subject" in
         "intron") 
 		rcmd=${rcmd_intron}
 		;;
-        "annotation") 
+        "peak_annotation") 
 		rcmd=${rcmd_peakAnnotation}
 		;;
 	"m6A")
@@ -110,7 +110,7 @@ case "$subject" in
 	*)
 		echo "Not a valid subject term, valid valuses are: \
                 	5parts, 3parts, intron, m6A, m6Autr5, m6Acds, m6Autr3, GLORIm6A, m6Am, \
-			m6Autr5, m6Acds, m6Autr3, R_loop, TSScgt, ChIPoverlap, ChIPparts, annotation"
+			m6Autr5, m6Acds, m6Autr3, R_loop, TSScgt, ChIPoverlap, ChIPparts, peak_annotation"
 		exit 1
 		;;
 esac
@@ -129,33 +129,35 @@ for d in $(ls -d ${factor}_CITS_crosslinkSite); do
 			if [[ $subject == +(ChIPparts|ChIPoverlap) ]]; then
 				if [[ ! -f ${Chip_peak_dir}/${factor}_summits_hg19.bed ]]; then
 					echo "             ${factor}_summits_hg19.bed does not exit!"
-					exit 0
+					continue
 				fi
-                        fi
+            fi
 			case "$subject" in
-				+("5parts"|"3parts"|"intron"|"annotation"))
-                        		submitjob -c 5 -m 20 Rscript $rcmd $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed \
-									   ${factor}_${subject} \
-									   $outd
+				+("5parts"|"3parts"|"intron"|"peak_annotation"))
+                        	submitjob -c 5 -m 20 Rscript $rcmd $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed \
+							${factor} \
+							${subject} \
+							$outd
 					;;
 				"ChIPparts")
-                                        submitjob -c 5 -m 20 Rscript $rcmd ${Chip_peak_dir}/${factor}_summits_hg19.bed \
-                                                                           ${factor}_${subject} \
-                                                                           $outd
-                                        ;;
+                            submitjob -c 5 -m 20 Rscript $rcmd ${Chip_peak_dir}/${factor}_summits_hg19.bed \
+                            ${factor} \
+							${subject} \
+                            $outd
+                    ;;
 				"ChIPoverlap")
-                                        submitjob -c 5 -m 20 Rscript $rcmd $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed \
-                                                                           ${factor} \
-                                                                           ${Chip_peak_dir}/${factor}_summits_hg19.bed  \
-                                                                           ${subject} \
-                                                                           $outd
+                            submitjob -c 5 -m 20 Rscript $rcmd $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed \
+                            ${factor} \
+                            ${Chip_peak_dir}/${factor}_summits_hg19.bed  \
+                            ${subject} \
+                            $outd
 					;;
 				*)
-					submitjob -c 5 -m 20 Rscript $rcmd $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed \
-									   ${factor} \
-									   ${sites}  \
-									   ${subject} \
-									   $outd
+							submitjob -c 5 -m 20 Rscript $rcmd $wd/$d/combined_${peakType}_${pv}_${factor}.${peak}.bed \
+							${factor} \
+							${sites}  \
+							${subject} \
+							$outd
 					;;
 			esac
 

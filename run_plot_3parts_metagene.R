@@ -28,7 +28,8 @@ if(file.exists("/home/greenblattlab/shuyepu/genomic_feature/3metaFeatures.rds"))
 args <- commandArgs(trailingOnly = T)
 queryfile <- args[1]
 querylabel <- args[2]
-outdir <- args[3]
+subject <- args[3]
+outdir <- args[4]
 
 if(length(args) < 2) stop("query file and query label are mandatory!")
 if(is.na(outdir)) outdir <- "."
@@ -55,6 +56,6 @@ df <- plot_5parts_metagene(queryFiles=queryfile,
 			   nc=5)
 
 #print(summary(df))
-write.table(df, file.path(outdir, paste0(querylabel, "_plot_df.tab")), sep="\t", quote=F, col.names=T, row.names=T)
+write.table(df, file.path(outdir, paste(querylabel, subject, "plot_df.tab", sep="_")), sep="\t", quote=F, col.names=T, row.names=T)
 
 ## END
